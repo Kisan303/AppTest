@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for, render_template
 from extensions import mongo
 from routes.admin_routes import admin_routes
 from routes.teacher_routes import teacher_routes
@@ -13,6 +13,11 @@ app.config.from_object(Config)
 
 # Initialize the PyMongo instance with the app
 mongo.init_app(app)
+
+# Default route: Redirect to the admin login page
+@app.route('/')
+def adminLogin():
+    return redirect(url_for('admin_routes.login'))  # Redirects to /admin/login
 
 # Test route to check MongoDB connection
 @app.route('/test_db')
@@ -33,4 +38,4 @@ app.register_blueprint(teacher_routes, url_prefix='/teacher')
 app.register_blueprint(student_routes, url_prefix='/student')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
